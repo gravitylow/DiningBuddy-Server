@@ -94,6 +94,11 @@ def get_graph(location):
     response.mimetype = 'text/html'
     return response
 
+@app.route('/cnu/api/v1.0/menus/<location>/', methods=['GET'])
+def get_menu(location):
+    response = app.send_static_file('menus/' + location + '.txt')
+    return response
+
 # Post
 @app.route('/cnu/api/v1.0/locations', methods = ['POST'])
 def create_location():
