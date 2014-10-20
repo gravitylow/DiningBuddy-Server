@@ -17,8 +17,8 @@ key = '**REMOVED**'
 today = datetime.now(pytz.timezone('US/Eastern'))
 today = today.replace(hour=0, minute=0, second=0)
 
-regattas = []
-commons = []
+regattas = {}
+commons = {}
 
 service = build('calendar', 'v3', developerKey=key)
 request = service.events().list(calendarId=regattas_id, timeMin=today.isoformat(), timeMax=(today + timedelta(days=1)).isoformat(), singleEvents=True, userIp='2602:ffea:a::580b:b2c3')
@@ -29,17 +29,15 @@ while request != None:
       description = event.get('description')
       start = dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%I:%M%p').lstrip("0")
       end = dateutil.parser.parse(event.get('end').get('dateTime')).strftime('%I:%M%p').lstrip("0")
+      time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%H'))
 
       dictionary = {}
       dictionary['summary'] = summary
       dictionary['description'] = description
       dictionary['start'] = start
       dictionary['end'] = end
-      regattas.append(dictionary)
+      regattas[time] = dictionary
     request = service.events().list_next(request, response)
-file = open('static/menus/regattas.txt', 'w')
-file.write(json.dumps(regattas))
-file.close()
 
 request = service.events().list(calendarId=commons_id, timeMin=today.isoformat(), timeMax=(today + timedelta(days=1)).isoformat(), singleEvents=True)
 while request != None:
@@ -49,14 +47,28 @@ while request != None:
       description = event.get('description')
       start = dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%I:%M%p').lstrip("0")
       end = dateutil.parser.parse(event.get('end').get('dateTime')).strftime('%I:%M%p').lstrip("0")
+      time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%H'))
 
       dictionary = {}
       dictionary['summary'] = summary
       dictionary['description'] = description
       dictionary['start'] = start
       dictionary['end'] = end
-      commons.append(dictionary)
+      commons[time] = dictionary
     request = service.events().list_next(request, response)
-file = open('static/menus/commons.txt', 'w')
+
+regattas_new = []
+commons_new = []
+
+for value in sorted(regattas):
+    regattas_new.append(regattas.get(value))
+
+for value in sorted(commons):
+    commons_new.append(commons.get(value))
+
+file = open('static/menus/regattas', 'w')
+file.write(json.dumps(regattas))
+file.close()
+file = open('static/menus/commons', 'w')
 file.write(json.dumps(commons))
 file.close()
