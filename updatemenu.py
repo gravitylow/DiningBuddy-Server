@@ -66,9 +66,9 @@ for value in sorted(regattas):
 for value in sorted(commons):
     commons_new.append(commons.get(value))
 
-file = open('static/menus/regattas', 'w')
-file.write(json.dumps(regattas))
+file = open('static/menus/Regattas.txt', 'w')
+file.write(json.dumps(regattas_new))
 file.close()
-file = open('static/menus/commons', 'w')
-file.write(json.dumps(commons))
+file = open('static/menus/Commons.txt', 'w')
+file.write(json.dumps(commons_new))
 file.close()

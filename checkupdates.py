@@ -5,7 +5,7 @@ import pymongo
 from time import strftime
 import pygal
 from pygal import Config
-from pygal.style import LightSolarizedStyle, LightGreenStyle
+from pygal.style import LightSolarizedStyle, LightGreenStyle, Style
 
 client = MongoClient()
 db = client.cnu
@@ -55,10 +55,25 @@ for location in get_recursive_locations():
     graph = graphs.find({'location': loc}).sort("key", pymongo.ASCENDING)
     obj = loads(dumps(graph))
 
+    style = Style(
+        background='#DFDFD7',
+        plot_background='#DFDFD7'',
+        foreground='#333333',
+        foreground_light='#666',
+        foreground_dark='#222222',
+        opacity='.5',
+        opacity_hover='.9',
+        transition='250ms ease-in',
+        colors=(
+            '#7dcf30', '#247fab', lighten('#7dcf30', 10), '#ccc',
+            darken('#7dcf30', 15), '#ddd', lighten('#247fab', 10),
+            darken('#247fab', 15)))
+
+
     config = Config()
     config.show_legend = False
     config.fill = True
-    config.style = LightGreenStyle
+    config.style = style
     config.x_label_rotation = 80
     config.show_only_major_dots = True
     config.x_labels_major_every = 2

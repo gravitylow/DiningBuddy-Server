@@ -5,15 +5,14 @@ import pymongo
 from bson.json_util import dumps, loads
 import json
 import threading
-import pygal
-from pygal import Config
-from pygal.style import LightSolarizedStyle, LightGreenStyle
+import time
 
 client = MongoClient()
 db = client.cnu
 locations = db.locations
 updates = db.updates
 feedback = db.feedback
+feedback_archive = db.feedbackarchive
 graphs = db.graphs
 info = []
 
@@ -99,6 +98,13 @@ def get_menu(location):
     response = app.send_static_file('menus/' + location + '.txt')
     return response
 
+@app.route('/cnu/api/v1.0/feed/<location>/', methods=['GET'])
+def get_feed(location):
+    feed = feedback.find({'location': location}).limit(5)
+    if not feed:
+        abort(404)
+    return dumps(feed)
+
 # Post
 @app.route('/cnu/api/v1.0/locations', methods = ['POST'])
 def create_location():
@@ -120,6 +126,7 @@ def create_feedback():
     if not request.json or not 'id' in request.json:
         abort(400)
     feedback.insert(request.json)
+    feedback_archive.insert(request.json)
     return make_response("OK", 201)
 
 if __name__ == '__main__':
