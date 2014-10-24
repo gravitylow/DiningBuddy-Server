@@ -100,7 +100,7 @@ def get_menu(location):
 
 @app.route('/cnu/api/v1.0/feed/<location>/', methods=['GET'])
 def get_feed(location):
-    feed = feedback.find({'location': location}).limit(5)
+    feed = feedback.find({'target': location}).limit(10)
     if not feed:
         abort(404)
     return dumps(feed)

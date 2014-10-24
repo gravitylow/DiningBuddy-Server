@@ -24,4 +24,4 @@ for record in cursor:
     current = int(round(time.time() * 1000))
     if (current - updated > max_time_feedback) and not record.get('pinned'):
         id = record.get('id')
-        #feedback.remove({"id": id})
+        feedback.remove({"id": id})
