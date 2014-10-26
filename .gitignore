@@ -1,2 +1,4 @@
 static/
 flask/
+.idea/*
+*.iml

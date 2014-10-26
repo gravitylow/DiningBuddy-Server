@@ -1,0 +1,3 @@
+*/3 * * * * /var/www/api.gravitydevelopment.net/cnu/flask/bin/python /var/www/api.gravitydevelopment.net/cnu/cleandb.py
+0,30 * * * * /var/www/api.gravitydevelopment.net/cnu/flask/bin/python /var/www/api.gravitydevelopment.net/cnu/checkupdates.py
+0 1 * * * /var/www/api.gravitydevelopment.net/cnu/flask/bin/python /var/www/api.gravitydevelopment.net/cnu/updatemenu.py

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!flask/bin/python
 from pymongo import MongoClient
 import time
 
