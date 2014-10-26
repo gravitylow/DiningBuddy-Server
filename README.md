@@ -27,21 +27,19 @@ Add ssh key to github
     mkdir static
     mkdir static/menus
     mkdir static/graphs
-    cd /etc/apache2/sites-available
-    
-Copy over data/apache2/api.gravitydevelopment.net.conf
-Copy over data/apache2/ssl
-
-    sudo a2enmod ssl
-    sudo a2ensite api.gravitydevelopment.net
-    sudo service apache2 restart
     sudo crontab -e
     
-Copy over data/crontab
-Copy over data/locations.json and data/graphs.json
+Add data/crontab
 
-    mongoimport --db cnu --collection locations --file locations.json
-    mongoimport --db cnu --collection graphs --file graphs.json
-    sudo vi /etc/apache2/ports.conf
-    
-Remove Listen 80
+    mongoimport --db cnu --collection locations --file data/mongo/locations.json
+    mongoimport --db cnu --collection graphs --file data/mongo/graphs.json
+    cd /etc/apache2/sites-available
+        
+Copy data/apache2/api.gravitydevelopment.net.conf
+
+Copy data/apache2/ssl
+
+    sudo a2enmod ssl
+    sudo a2enmod info
+    sudo a2ensite api.gravitydevelopment.net
+    sudo service apache2 restart
