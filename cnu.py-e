@@ -119,7 +119,7 @@ def get_menu(location):
 
 @app.route('/cnu/api/v1.0/feed/<location>/', methods=['GET'])
 def get_feed(location):
-    feed = feedback.find({'target': location, 'feedback':{"$exists" : True, "$ne" : "", "$ne": None}}).limit(10)
+    feed = feedback.find({'target': location, 'feedback':{"$exists" : True, "$ne" : "", "$ne": None}}).limit(20).sort('time', pymongo.DESCENDING)
     if not feed:
         abort(404)
     return json_util.dumps(feed)
