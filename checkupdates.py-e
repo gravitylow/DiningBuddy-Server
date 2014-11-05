@@ -45,10 +45,8 @@ for location in get_recursive_locations():
     people = 0
     for i in info:
         if i.get('location') == loc:
-            people = i.get('people')
-    people = people + random.randrange(3,15)
-    insert = {'id':time + "_" + loc, 'key':timeKey, 'time':time, 
-'displayTime':displayTime, 'location':loc, 'people':people}
+            people = i.get('people') + random.randrange(3,15)
+    insert = {'id':time + "_" + loc, 'key':timeKey, 'time':time, 'displayTime':displayTime, 'location':loc, 'people':people}
     key = {'id':time + "_" + loc}
     graphs.update(key, insert, upsert=True)
 
