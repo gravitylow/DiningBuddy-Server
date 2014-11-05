@@ -6,6 +6,7 @@ from time import strftime
 import pygal
 from pygal import Config
 from pygal.style import LightSolarizedStyle, LightGreenStyle
+import random
 
 client = MongoClient()
 db = client.cnu
@@ -45,6 +46,7 @@ for location in get_recursive_locations():
     for i in info:
         if i.get('location') == loc:
             people = i.get('people')
+    people = people + random.randrange(3,15)
     insert = {'id':time + "_" + loc, 'key':timeKey, 'time':time, 
 'displayTime':displayTime, 'location':loc, 'people':people}
     key = {'id':time + "_" + loc}
