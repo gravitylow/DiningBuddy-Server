@@ -52,11 +52,11 @@ def requery_updates():
         crowded = 1 if people > 20 else 2 if people > 50 else 0
         i.update({'crowded':crowded})
     if not hasR:
-        info.append({'location':'Regattas','people':random.randrange(3,15)})
+        info.append({'location':'Regattas','people':random.randrange(3,15),'crowded':0})
     if not hasC:
-        info.append({'location':'Commons','people':random.randrange(3,15)})
+        info.append({'location':'Commons','people':random.randrange(3,15),'crowded':0})
     if not hasE:
-        info.append({'location':'Einsteins','people':random.randrange(3,15)})
+        info.append({'location':'Einsteins','people':random.randrange(3,15),'crowded':0})
 
 def requery_locations():
     threading.Timer(60 * 5, requery_locations).start()
