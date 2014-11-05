@@ -45,7 +45,7 @@ def requery_locations():
     threading.Timer(60 * 5, requery_locations).start()
     global location_cursor
     location_cursor = locations.find()
-    if location_cursor.size() == 0:
+    if location_cursor.count() == 0:
         requery_locations();
 
 requery_updates()
