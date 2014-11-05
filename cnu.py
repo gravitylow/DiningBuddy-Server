@@ -46,7 +46,7 @@ def requery_locations():
     global location_cursor
     location_cursor = locations.find()
     if location_cursor.count() == 0:
-        requery_locations();
+        location_cursor = locations.find()
 
 requery_updates()
 requery_locations()
