@@ -6,6 +6,7 @@ from bson import json_util
 import json
 import threading
 import time
+import random
 
 client = MongoClient()
 db = client.cnu
@@ -38,7 +39,8 @@ def requery_updates():
             info.append({'location':location,'people':1})
     for i in info:
         people = i.get('people')
-        crowded = 1 if people > 10 else 2 if people > 20 else 0
+        people = people + random.randrange(3,15)
+        crowded = 1 if people > 20 else 2 if people > 50 else 0
         i.update({'crowded':crowded})
 
 def requery_locations():
