@@ -97,14 +97,14 @@ def get_data(location):
     graph = graphs.find({'location': location})
     if not graph:
         abort(404)
-    return json.dumps(graph, default=json_util.default)
+    return json_util.dumps(graph)
 
 @app.route('/cnu/api/v1.0/data/<location>/<time>', methods=['GET'])
 def get_data_by_time(location, time):
     graph = graphs.find_one({'location': location, 'time': time})
     if not graph:
         abort(404)
-    return json.dumps(graph, default=json_util.default)
+    return json_util.dumps(graph)
 
 @app.route('/cnu/api/v1.0/graphs/<location>/', methods=['GET'])
 def get_graph(location):
@@ -122,7 +122,7 @@ def get_feed(location):
     feed = feedback.find({'target': location, 'feedback':{"$exists" : True, "$ne" : "", "$ne": None}}).limit(10)
     if not feed:
         abort(404)
-    return json.dumps(feed, default=json_util.default)
+    return json_util.dumps(feed)
 
 # Post
 @app.route('/cnu/api/v1.0/locations', methods = ['POST'])
