@@ -2,7 +2,7 @@
 from flask import Flask, jsonify, make_response, abort, request, Response
 from pymongo import MongoClient
 import pymongo
-from bson.json_util import dumps, loads
+from bson import json_util
 import json
 import threading
 import time
@@ -18,7 +18,7 @@ info = []
 
 update_cursor = updates.find()
 location_cursor = locations.find()
-
+location_list = []
 def requery_updates():
     threading.Timer(60, requery_updates).start()
     global update_cursor
@@ -44,9 +44,9 @@ def requery_updates():
 def requery_locations():
     threading.Timer(60 * 5, requery_locations).start()
     global location_cursor
+    global location_list
     location_cursor = locations.find()
-    if location_cursor.count() == 0:
-        location_cursor = locations.find()
+    location_list = list(locations.find())
 
 requery_updates()
 requery_locations()
@@ -69,25 +69,25 @@ def bad_request(error):
 
 @app.route('/cnu/api/v1.0/locations', methods = ['GET'])
 def get_locations():
-    return dumps(location_cursor)
+    return json.dumps(location_list, default=json_util.default)
 
 @app.route('/cnu/api/v1.0/info/', methods = ['GET'])
 def get_info():
-    return dumps(info)
+    return json.dumps(info)
 
 @app.route('/cnu/api/v1.0/data/<location>/', methods=['GET'])
 def get_data(location):
     graph = graphs.find({'location': location})
     if not graph:
         abort(404)
-    return dumps(graph)
+    return json.dumps(graph)
 
 @app.route('/cnu/api/v1.0/data/<location>/<time>', methods=['GET'])
 def get_data_by_time(location, time):
     graph = graphs.find_one({'location': location, 'time': time})
     if not graph:
         abort(404)
-    return dumps(graph)
+    return json.dumps(graph)
 
 @app.route('/cnu/api/v1.0/graphs/<location>/', methods=['GET'])
 def get_graph(location):
@@ -105,7 +105,7 @@ def get_feed(location):
     feed = feedback.find({'target': location, 'feedback':{"$exists" : True, "$ne" : "", "$ne": None}}).limit(10)
     if not feed:
         abort(404)
-    return dumps(feed)
+    return json.dumps(feed)
 
 # Post
 @app.route('/cnu/api/v1.0/locations', methods = ['POST'])
