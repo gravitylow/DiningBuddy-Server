@@ -16,6 +16,7 @@ key = '**REMOVED**'
 
 today = datetime.now(pytz.timezone('US/Eastern'))
 today = today.replace(hour=0, minute=0, second=0)
+today = today + timedelta(days=1)
 
 regattas = {}
 commons = {}
@@ -66,10 +67,11 @@ for value in sorted(regattas):
 for value in sorted(commons):
     commons_new.append(commons.get(value))
 
-file = open('static/menus/Regattas.txt', 'w')
+file = open('/var/www/api.gravitydevelopment.net/cnu/static/menus/Regattas.txt', 'w')
 file.write(json.dumps(regattas_new))
 file.close()
-file = open('static/menus/Commons.txt', 'w')
+file = open('/var/www/api.gravitydevelopment.net/cnu/static/menus/Commons.txt', 'w')
 file.write(json.dumps(commons_new))
 file.close()
-print('Calendar updated')
+
+
