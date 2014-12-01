@@ -7,6 +7,7 @@ import json
 import threading
 import time
 import random
+import os
 
 client = MongoClient()
 db = client.cnu
@@ -18,7 +19,9 @@ info = []
 
 update_cursor = updates.find()
 
-locations = open('data/cnu.geojson','r').read()
+location_list = location_list = list(db.locations.find())
+
+locations = open(os.path.dirname(os.path.realpath(__file__)) + '/data/cnu.geojson','r').read()
 
 app = Flask(__name__)
 
@@ -79,6 +82,10 @@ def bad_request(error):
 
 @app.route('/cnu/api/v1.0/locations', methods = ['GET'])
 def get_locations():
+    return json.dumps(location_list, default=json_util.default)
+
+@app.route('/cnu/api/v1.0/locations2', methods = ['GET'])
+def get_locations2():
     return locations
 
 @app.route('/cnu/api/v1.0/info/', methods = ['GET'])
