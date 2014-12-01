@@ -1,4 +1,5 @@
 static/
 flask/
+logs/
 .idea/*
 *.iml

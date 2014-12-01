@@ -88,6 +88,10 @@ def get_locations():
 def get_locations2():
     return locations
 
+@app.route('/cnu/api/v1.0/error', methods = ['GET'])
+def get_error():
+    return json.dumps()
+
 @app.route('/cnu/api/v1.0/info/', methods = ['GET'])
 def get_info():
     return json.dumps(info)
