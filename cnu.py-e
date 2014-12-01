@@ -122,10 +122,14 @@ def get_feed(location):
 def update_user():
     if not request.json or not 'id' in request.json:
         abort(400)
+
     current = int(round(time.time() * 1000))
     request.json['time'] = current
+
+    if abs(current - request.json['send_time']) > 30 * 1000:
+        abort(400)
+
     key = {'id':request.json['id']}
-    app.logger.debug('receieved update at ' + str(current))
     updates.update(key, request.json, upsert=True)
     return make_response("OK", 201)
 
@@ -133,9 +137,15 @@ def update_user():
 def create_feedback():
     if not request.json or not 'id' in request.json:
         abort(400)
+
     current = int(round(time.time() * 1000))
     request.json['time'] = current
+
+    if abs(current - request.json['send_time']) > 30 * 1000:
+        abort(400)
+
     request.json['pinned'] = False
+
     feedback.insert(request.json)
     feedback_archive.insert(request.json)
     return make_response("OK", 201)
