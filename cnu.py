@@ -122,6 +122,8 @@ def get_feed(location):
 def update_user():
     if not request.json or not 'id' in request.json:
         abort(400)
+    current = int(round(time.time() * 1000))
+    request.json['time'] = current
     key = {'id':request.json['id']}
     updates.update(key, request.json, upsert=True)
     return make_response("OK", 201)
@@ -130,6 +132,8 @@ def update_user():
 def create_feedback():
     if not request.json or not 'id' in request.json:
         abort(400)
+    current = int(round(time.time() * 1000))
+    request.json['time'] = current
     feedback.insert(request.json)
     feedback_archive.insert(request.json)
     return make_response("OK", 201)
