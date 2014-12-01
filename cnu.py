@@ -20,8 +20,11 @@ info = []
 update_cursor = updates.find()
 location_cursor = locations.find()
 location_list = []
+
+app = Flask(__name__)
 def requery_updates():
     threading.Timer(60, requery_updates).start()
+    app.logger.debug('Requerying updates!')
     global update_cursor
     update_cursor = updates.find()
 
@@ -67,8 +70,6 @@ def requery_locations():
 
 requery_updates()
 requery_locations()
-
-app = Flask(__name__)
 
 @app.route('/')
 def index():

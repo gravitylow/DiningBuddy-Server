@@ -30,16 +30,17 @@ def recursive_locations(build, locs):
             recursive_locations(build, loc.get('subLocations'))
     return build
 
+for location in get_recursive_locations():
+    loc = location.get('name')
+    info.append({'location':loc,'people':0})
+
 for record in cursor:
     location = record.get('location')
-    found = False
     for i in info:
         if i.get('location') == location:
-            found = True
             people = i.get('people')
             i.update({'people':people+1})
-    if not found:
-        info.append({'location':location,'people':1})
+
 for location in get_recursive_locations():
     loc = location.get('name')
     people = 0
