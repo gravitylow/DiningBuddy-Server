@@ -24,7 +24,7 @@ update_cursor = updates.find()
 
 location_list = location_list = list(db.locations.find())
 
-locations = open(os.path.dirname(os.path.realpath(__file__)) + '/data/cnu.geojson','r').read()
+locations = open(os.path.dirname(os.path.realpath(__file__)) + '/data/cnu.geojson','r').read().replace('\n', '')
 
 app = Flask(__name__)
 
