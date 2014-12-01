@@ -125,6 +125,7 @@ def update_user():
     current = int(round(time.time() * 1000))
     request.json['time'] = current
     key = {'id':request.json['id']}
+    app.logger.debug('receieved update at ' + str(current))
     updates.update(key, request.json, upsert=True)
     return make_response("OK", 201)
 
@@ -134,6 +135,7 @@ def create_feedback():
         abort(400)
     current = int(round(time.time() * 1000))
     request.json['time'] = current
+    request.json['pinned'] = False
     feedback.insert(request.json)
     feedback_archive.insert(request.json)
     return make_response("OK", 201)
