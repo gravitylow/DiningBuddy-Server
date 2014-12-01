@@ -4,10 +4,13 @@ from pymongo import MongoClient
 import pymongo
 from bson import json_util
 import json
-import threading
 import time
 import random
 import os
+from apscheduler.scheduler import Scheduler
+
+scheduler = Scheduler()
+scheduler.start()
 
 client = MongoClient()
 db = client.cnu
@@ -26,7 +29,6 @@ locations = open(os.path.dirname(os.path.realpath(__file__)) + '/data/cnu.geojso
 app = Flask(__name__)
 
 def requery_updates():
-    threading.Timer(60, requery_updates).start()
     app.logger.debug('Requerying updates!')
     global update_cursor
     update_cursor = updates.find()
@@ -64,7 +66,7 @@ def requery_updates():
     if not hasE:
         info.append({'location':'Einsteins','people':random.randrange(3,15),'crowded':0})
 
-requery_updates()
+scheduler.add_interval_job(requery_updates, seconds = 60)
 
 @app.route('/')
 def index():
@@ -134,4 +136,4 @@ def create_feedback():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', use_reloader=False)
