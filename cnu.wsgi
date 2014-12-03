@@ -18,11 +18,9 @@ if not application.debug:
     print('debug!')
     from logging.handlers import SMTPHandler
 
-    mail_handler = SMTPHandler('127.0.0.1',
-                               'server-error@api.gravitydevelopment.net',
+    mail_handler = SMTPHandler('localhost',
+                               'adam.fendley@gmail.com',
                                ADMINS, 'CNU Failed')
     mail_handler.setLevel(logging.ERROR)
 
     application.logger.addHandler(mail_handler)
-
-    application.logger.error("This is test error")
