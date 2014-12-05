@@ -21,7 +21,7 @@ graphs = db.graphs
 info = []
 
 update_cursor = updates.find()
-alert_cursor = db.alerts.find()
+alert_list = json_util.dumps(db.alerts.find())
 
 location_list = location_list = list(db.locations.find())
 
@@ -101,7 +101,7 @@ def get_info():
 
 @app.route('/cnu/api/v1.0/alerts/', methods=['GET'])
 def get_alerts():
-    return json_util.dumps(alert_cursor)
+    return alert_list
 
 @app.route('/cnu/api/v1.0/graphs/<location>/', methods=['GET'])
 def get_graph(location):
