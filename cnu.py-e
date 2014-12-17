@@ -26,7 +26,10 @@ locations = open(os.path.dirname(os.path.realpath(__file__)) + '/data/cnu.geojso
 alert_list = json_util.dumps(db.alerts.find())
 info = Info(app, db)
 
-scheduler.add_interval_job(info.createInfo(), seconds = 60)
+def requery():
+    info.createInfo()
+
+scheduler.add_interval_job(requery, seconds = 60)
 
 @app.route('/')
 def index():

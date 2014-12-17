@@ -6,9 +6,10 @@ class Info:
 
     def __init__(self, app, db):
         self.logger = app.logger
-        logger.debug('created new info')
+        self.logger.debug('created new info')
         self.collection = db.updates
-        self.cursor = collection.find()
+        self.cursor = self.collection.find()
+	self.createInfo()
 
     def createInfo(self):
         self.info = []
