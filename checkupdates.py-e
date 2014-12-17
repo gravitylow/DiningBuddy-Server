@@ -52,7 +52,7 @@ for location in get_recursive_locations():
     graphs.update(key, insert, upsert=True)
 
     # Generate graph
-    
+
     graph = graphs.find({'location': loc}).sort("key", pymongo.ASCENDING)
     obj = loads(dumps(graph))
 
@@ -67,9 +67,7 @@ for location in get_recursive_locations():
     config.show_minor_y_labels = False
     config.major_label_font_size = 12
     config.print_values = False
-    #config.print_zeroes = True
-    #config.y_scale = 1
-    #config.order_min = 1
+    config.print_zeroes = True
     config.disable_xml_declaration = True
     chart = pygal.Line(config)
 

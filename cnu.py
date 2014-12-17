@@ -8,64 +8,25 @@ import time
 import random
 import os
 from apscheduler.scheduler import Scheduler
+from info import Info
 
 scheduler = Scheduler()
 scheduler.start()
 
 client = MongoClient()
 db = client.cnu
-updates = db.updates
 feedback = db.feedback
 feedback_archive = db.feedbackarchive
 graphs = db.graphs
-info = []
-
-update_cursor = updates.find()
-alert_list = json_util.dumps(db.alerts.find())
-
-locations = open(os.path.dirname(os.path.realpath(__file__)) + '/data/cnu.geojson','r').read().replace('\n', '')
 
 app = Flask(__name__)
 
-def requery_updates():
-    app.logger.debug('Requerying updates!')
-    global update_cursor
-    update_cursor = updates.find()
+# Data providers
+locations = open(os.path.dirname(os.path.realpath(__file__)) + '/data/cnu.geojson','r').read().replace('\n', '')
+alert_list = json_util.dumps(db.alerts.find())
+info = Info(app, db)
 
-    global info
-    info = []
-    for record in update_cursor:
-        location = record.get('location')
-        found = False
-        for i in info:
-            if i.get('location') == location:
-                found = True
-                people = i.get('people')
-                i.update({'people':people+1})
-        if not found:
-            info.append({'location':location,'people':1})
-    hasR = False
-    hasC = False
-    hasE = False
-    for i in info:
-        if i.get('location') == 'Regattas':
-            hasR = True
-        if i.get('location') == 'Commons':
-            hasC = True
-        if i.get('location') == 'Einsteins':
-            hasE = True
-        people = i.get('people')
-        people = people + random.randrange(3,15)
-        crowded = 1 if people > 20 else 2 if people > 50 else 0
-        i.update({'crowded':crowded})
-    if not hasR:
-        info.append({'location':'Regattas','people':random.randrange(3,15),'crowded':0})
-    if not hasC:
-        info.append({'location':'Commons','people':random.randrange(3,15),'crowded':0})
-    if not hasE:
-        info.append({'location':'Einsteins','people':random.randrange(3,15),'crowded':0})
-
-scheduler.add_interval_job(requery_updates, seconds = 60)
+scheduler.add_interval_job(info.createInfo(), seconds = 60)
 
 @app.route('/')
 def index():
@@ -91,7 +52,7 @@ def get_error():
 
 @app.route('/cnu/api/v1.0/info/', methods = ['GET'])
 def get_info():
-    return json.dumps(info)
+    return json.dumps(info.getInfo())
 
 @app.route('/cnu/api/v1.0/alerts/', methods=['GET'])
 def get_alerts():
