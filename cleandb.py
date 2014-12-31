@@ -26,8 +26,7 @@ for record in cursor:
 
 for x in set(['Regattas', 'Commons', 'Einsteins']):
     noise.createNoise(x)
-    logger.debug('created noise for ' + x)    
-    print('created noise for ' + x)
+
 cursor = feedback.find()
 for record in cursor:
     updated = record.get('time')
