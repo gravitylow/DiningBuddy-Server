@@ -6,19 +6,19 @@ class Info:
 
     def __init__(self, app, db):
         self.logger = app.logger
-        self.logger.debug('created new info')
         self.collection = db.updates
         self.cursor = self.collection.find()
 	self.createInfo()
 
     def createInfo(self):
+        self.cursor = self.collection.find()
         self.info = []
 
         # Insert necessary info
         self.info.append({'location':'Regattas','people':0,'crowded':0})
         self.info.append({'location':'Commons','people':0,'crowded':0})
         self.info.append({'location':'Einsteins','people':0,'crowded':0})
-
+        
         # Parse current updates
         for record in self.cursor:
             location = record.get('location')
@@ -30,10 +30,29 @@ class Info:
                     crowded = 1 if people > 20 else 2 if people > 50 else 0
                     i.update({'people':people})
                     i.update({'crowded':crowded})
-                if not found:
-                    self.info.append({'location':location,'people':1,'crowded':0})
+                    break
+            if not found:
+                self.info.append({'location':location,'people':1,'crowded':0})
 
-            return self.info
+        return self.info
 
     def getInfo(self):
         return self.info
+
+    def getInfoLocation(self, location):
+        for x in self.info:
+            if x['location'] == location:
+                return x
+        return 0
+
+    def getPeople(self, location):
+        for x in self.info:
+            if x['location'] == location:
+                return x['people']
+        return 0
+
+    def getCrowded(self, location):
+        for x in self.info:
+            if x['location'] == location:
+                return x['crowded']
+        return 0

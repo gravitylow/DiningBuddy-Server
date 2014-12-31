@@ -46,7 +46,7 @@ def bad_request(error):
 # Get
 
 @app.route('/cnu/api/v1.0/locations/', methods = ['GET'])
-def get_locations2():
+def get_locations():
     return locations
 
 @app.route('/cnu/api/v1.0/error/', methods = ['GET'])
@@ -78,6 +78,22 @@ def get_feed(location):
     if not feed:
         abort(404)
     return json_util.dumps(feed)
+
+@app.route('/cnu/api/v1.0/info/<location>/', methods = ['GET'])
+def get_info_location(location):
+    i = info.getInfoLocation(location)
+    if i == 0:
+        abort(404)
+    else:
+        return make_response(jsonify(i))
+
+@app.route('/cnu/api/v1.0/people/<location>/', methods = ['GET'])
+def get_people(location):
+    return make_response(str(info.getPeople(location)))
+
+@app.route('/cnu/api/v1.0/crowded/<location>/', methods = ['GET'])
+def get_crowded(location):
+    return make_response(str(info.getCrowded(location)))
 
 # Post
 

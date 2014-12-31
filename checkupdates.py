@@ -7,32 +7,20 @@ import pygal
 from pygal import Config
 from pygal.style import LightSolarizedStyle, LightGreenStyle
 import random
-
 client = MongoClient()
 db = client.cnu
-locations = db.locations
+
+locations = ['Regattas','Commons','Einsteins']
 updates = db.updates
+cursor = db.updates.find()
 graphs = db.graphs
-cursor = updates.find()
 time = strftime("%H:%M")
 displayTime = strftime("%I:%M%P")
 timeKey = int(strftime("%H%M"))
 info = []
 
-def get_recursive_locations():
-    return recursive_locations([], locations.find())
-
-def recursive_locations(build, locs):
-    for loc in locs:
-        loc = loads(dumps(loc))
-        build.append(loc)
-        if len(loc.get('subLocations')) > 0:
-            recursive_locations(build, loc.get('subLocations'))
-    return build
-
-for location in get_recursive_locations():
-    loc = location.get('name')
-    info.append({'location':loc,'people':0})
+for location in locations:
+    info.append({'location':location,'people':0})
 
 for record in cursor:
     location = record.get('location')
@@ -41,19 +29,18 @@ for record in cursor:
             people = i.get('people')
             i.update({'people':people+1})
 
-for location in get_recursive_locations():
-    loc = location.get('name')
+for location in locations:
     people = 0
     for i in info:
-        if i.get('location') == loc:
-            people = i.get('people') + random.randrange(3,15)
-    insert = {'id':time + "_" + loc, 'key':timeKey, 'time':time, 'displayTime':displayTime, 'location':loc, 'people':people}
-    key = {'id':time + "_" + loc}
+        if i.get('location') == location:
+            people = i.get('people')
+    insert = {'id':time + "_" + location, 'key':timeKey, 'time':time, 'displayTime':displayTime, 'location':location, 'people':people}
+    key = {'id':time + "_" + location}
     graphs.update(key, insert, upsert=True)
 
     # Generate graph
 
-    graph = graphs.find({'location': loc}).sort("key", pymongo.ASCENDING)
+    graph = graphs.find({'location': location}).sort("key", pymongo.ASCENDING)
     obj = loads(dumps(graph))
 
     config = Config()
@@ -81,4 +68,4 @@ for location in get_recursive_locations():
         p.append(int(l.get('people')))
     chart.x_labels = t
     chart.add('People', p)
-    chart.render_to_file('/var/www/api.gravitydevelopment.net/cnu/static/graphs/' + loc + '.svg')
+    chart.render_to_file('/var/www/api.gravitydevelopment.net/cnu/static/graphs/' + location + '.svg')
