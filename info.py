@@ -36,6 +36,9 @@ class Info:
 
         return self.info
 
+    def createUpdate(self, json, key):
+        self.collection.update(key, json, upsert=True)
+
     def getInfo(self):
         return self.info
 

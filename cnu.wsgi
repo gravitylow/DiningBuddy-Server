@@ -15,7 +15,6 @@ application.secret_key = '41Sy%6kvbf4AW4oOMo#NaYnZFKxE3Z'
 application.static_url_path = ''
 
 if not application.debug:
-    print('debug!')
     from logging.handlers import SMTPHandler
 
     mail_handler = SMTPHandler('localhost',

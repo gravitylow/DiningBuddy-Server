@@ -109,7 +109,7 @@ def update_user():
         abort(400)
 
     key = {'id':request.json['id']}
-    updates.update(key, request.json, upsert=True)
+    info.createUpdate(request.json, key)
     return make_response("OK", 201)
 
 @app.route('/cnu/api/v1.0/feedback/', methods = ['POST'])
