@@ -16,7 +16,6 @@ key = '**REMOVED**'
 
 today = datetime.now(pytz.timezone('US/Eastern'))
 today = today.replace(hour=0, minute=0, second=0)
-today = today + timedelta(days=1)
 
 regattas = {}
 commons = {}
