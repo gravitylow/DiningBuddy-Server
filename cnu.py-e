@@ -97,7 +97,7 @@ def get_crowded(location):
 
 # Post
 
-@app.route('/cnu/api/v1.0/update/', methods = ['POST'])
+@app.route('/cnu/api/v1.0/update', methods = ['POST'])
 def update_user():
     if not request.json or not 'id' in request.json:
         abort(400)
@@ -112,7 +112,7 @@ def update_user():
     info.createUpdate(request.json, key)
     return make_response("OK", 201)
 
-@app.route('/cnu/api/v1.0/feedback/', methods = ['POST'])
+@app.route('/cnu/api/v1.0/feedback', methods = ['POST'])
 def create_feedback():
     if not request.json or not 'id' in request.json:
         abort(400)
