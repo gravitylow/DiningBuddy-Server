@@ -7,8 +7,8 @@ from noise import Noise
 
 logger = app.logger;
 
-max_time_update = 60 * 10 * 1000
-max_time_feedback = 60 * 30 * 1000
+max_time_update = 60 * 30 * 1000
+max_time_feedback = 60 * 60 * 1000
 
 client = MongoClient()
 db = client.cnu
