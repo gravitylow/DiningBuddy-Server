@@ -19,6 +19,7 @@ class Noise:
         timekey = int(time.strftime("%H%M"))
         timekey = float(timekey)
         amount = random.randrange(self.minimum, self.maximum)
+        current = int(round(time.time() * 1000))
         
         if timekey >= 2000: # 8pm
             timekey = timekey - 2000
