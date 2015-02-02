@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify, make_response, abort, request, Response
+from flask import Flask, jsonify, make_response, abort, request, Response, render_template
 from pymongo import MongoClient
 import pymongo
 from bson import json_util
@@ -95,23 +95,29 @@ def get_people(location):
 def get_crowded(location):
     return make_response(str(info.getCrowded(location)))
 
+@app.route('/cnu/api/v1.0/maps/updates/', methods=['GET'])
+def get_map_updates():
+    response = app.send_static_file('maps/updates.html')
+    return response
 # Post
 
 @app.route('/cnu/api/v1.0/update/', methods = ['POST'])
 def update_user():
     if not request.json or not 'id' in request.json:
+        app.logger.warning(str(request.json) + ' disqualified for id')
         abort(400)
 
     current = int(round(time.time() * 1000))
     request.json['time'] = current
 
-    if abs(current - request.json['send_time']) > 30 * 1000:
+    if abs(current - request.json['send_time']) > (120 * 1000):
+        app.logger.warning(str(request.json) + ' disqualified for ' + str(current) + ' - ' + str(request.json['send_time']) + ' > 120 * 1000')
+        app.logger.warning('Current time: ' + str(current))
         abort(400)
 
     key = {'id':request.json['id']}
     info.createUpdate(request.json, key)
     return make_response("OK", 201)
-
 @app.route('/cnu/api/v1.0/feedback/', methods = ['POST'])
 def create_feedback():
     if not request.json or not 'id' in request.json:

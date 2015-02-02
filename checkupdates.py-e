@@ -22,6 +22,25 @@ info = []
 for location in locations:
     info.append({'location':location,'people':0})
 
+# Generate Map
+js = "var map = L.map('map').setView([37.063130980486, -76.49447679519653], 17);L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {maxZoom: 18,id: 'examples.map-i875mjb7'}).addTo(map);"
+for record in cursor:
+    uuid = record.get('id')
+    location = record.get('location')
+    lat = record.get('lat')
+    lon = record.get('lon')
+    print (uuid)
+    print (location)
+    print (lat)
+    print (lon)
+    js = js + "L.marker([" + str(lat) + "," + str(lon) + "]).addTo(map).bindPopup(\"<b>Location:</b> " + location + "<br /><b>UUID:</b> " + uuid + "\");"
+
+jsfile = open('/var/www/api.gravitydevelopment.net/cnu/static/maps/updates.js', 'w')
+jsfile.write(js)
+
+cursor = db.updates.find()
+
+# Sum people
 for record in cursor:
     location = record.get('location')
     for i in info:
