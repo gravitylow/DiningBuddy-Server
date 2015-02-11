@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from cnu import app
 import imaplib
 import email
+import time, datetime
 
 logger = app.logger
 
@@ -23,13 +24,18 @@ def process_mailbox(M):
             return
         msg = email.message_from_string(data[0][1])
         title = 'CNU ALERT: %s' % (msg['Subject'])
-        value = {"title": title, "target_os": "all", "target_version": "all", "target_time_min": 0, "target_time_max": 0}
+        value = {"title": title, "target_os": "all", "target_version": "all", "target_time_min": 0}
         if msg.is_multipart():
             for part in msg.walk():
                 if part.get_content_type() == "text/plain":
                     body = part.get_payload(decode=True) #to control automatic email-style MIME decoding (e.g., Base64, uuencode, quoted-printable)
                     body = body.decode()
                     value['message'] = body
+
+        # Expire in a day
+        date_tuple = email.utils.parsedate_tz(msg['Date'])
+        expire = (time.mktime(datetime.datetime.fromtimestamp(email.utils.mktime_tz(date_tuple)).timetuple()) * 1000) + (24 * 60 * 60 * 1000)
+        value['target_time_max'] = expire
 
         key = {"title": title}
         alerts.update(key, value, upsert=True)
