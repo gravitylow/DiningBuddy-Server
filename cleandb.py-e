@@ -5,7 +5,7 @@ import logging
 from cnu import app
 from noise import Noise
 
-logger = app.logger;
+logger = app.logger
 
 max_time_update = 60 * 30 * 1000
 max_time_feedback = 60 * 60 * 1000
