@@ -29,7 +29,7 @@ def process_mailbox(M):
             for part in msg.walk():
                 if part.get_content_type() == "text/plain":
                     body = part.get_payload(decode=True) #to control automatic email-style MIME decoding (e.g., Base64, uuencode, quoted-printable)
-                    body = body.decode()
+                    body = body.decode().replace('\r\n', ' ')
                     value['message'] = body
 
         # Expire in a day
