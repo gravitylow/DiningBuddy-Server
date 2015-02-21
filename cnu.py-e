@@ -9,11 +9,12 @@ import random
 import os
 from apscheduler.scheduler import Scheduler
 from info import Info
+from db import Database
 
 scheduler = Scheduler()
 scheduler.start()
 
-client = MongoClient()
+client = Database.get_client()
 db = client.cnu
 feedback = db.feedback
 feedback_archive = db.feedbackarchive
@@ -126,12 +127,14 @@ def update_user():
 @app.route('/cnu/api/v1.0/feedback/', methods = ['POST'])
 def create_feedback():
     if not request.json or not 'id' in request.json:
+        app.logger.warning(str(request.json) + ' disqualified for id')
         abort(400)
 
     current = int(round(time.time() * 1000))
     request.json['time'] = current
 
     if abs(current - request.json['send_time']) > 30 * 1000:
+        app.logger.warning(str(request.json) + ' disqualified for time > ' + str(current))
         abort(400)
 
     request.json['pinned'] = False

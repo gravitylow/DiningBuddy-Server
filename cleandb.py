@@ -4,13 +4,14 @@ import time
 import logging
 from cnu import app
 from noise import Noise
+from db import Database
 
 logger = app.logger
 
 max_time_update = 60 * 30 * 1000
 max_time_feedback = 60 * 60 * 1000
 
-client = MongoClient()
+client = Database.get_client()
 db = client.cnu
 updates = db.updates
 feedback = db.feedback

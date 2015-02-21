@@ -7,7 +7,9 @@ import pygal
 from pygal import Config
 from pygal.style import LightSolarizedStyle, LightGreenStyle
 import random
-client = MongoClient()
+from db import Database
+
+client = Database.get_client()
 db = client.cnu
 
 locations = ['Regattas','Commons','Einsteins']
