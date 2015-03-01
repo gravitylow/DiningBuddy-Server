@@ -86,28 +86,6 @@ def bad_request(error):
 # Get
 
 """
-@api {get} /locations/ Request all locations
-@apiName GetLocations
-@apiGroup Location
-@apiVersion 1.0.0
-
-@apiSuccess {Object[]} locations GEOJson FeatureCollection of all locations
-@apiSuccess {String} locations.type GEOJson location list format (always "FeatureCollection")
-@apiSuccess {Object[]} locations.features GEOJson FeatureCollection
-@apiSuccess {String} locations.features.type GEOJson location format (always "Feature")
-@apiSuccess {Object[]} locations.features.properties GEOJson Feature properties
-@apiSuccess {String} locations.features.properties.name Location name
-@apiSuccess {Number} locations.features.properties.priority Location priority (higher number = more nested location)
-@apiSuccess {Object[]} locations.features.style GEOJson Styling data
-@apiSuccess {Object[]} locations.features.geometry GEOJson Geometry list
-@apiSuccess {String} locations.features.geometry.type GEOJson Geometry format (always "Polygon")
-@apiSuccess {Object[]} locations.features.geometry.coordinates GEOJson Coordinate list defining the polygon (lon, lat)
-"""
-@app.route('/cnu/api/v1.0/locations/', methods = ['GET'])
-def get_locations():
-    return locations
-
-"""
 @api {get} /error/ Force a server-side error
 @apiName GetError
 @apiGroup System
@@ -118,40 +96,6 @@ def get_locations():
 @app.route('/cnu/api/v1.0/error/', methods = ['GET'])
 def get_error():
     return json.dumps()
-
-"""
-@api {get} /info/ Request all location info
-@apiName GetInfo
-@apiGroup Location
-@apiVersion 1.0.0
-
-@apiSuccess {Object[]} info List of info
-@apiSuccess {String} info.location Location name
-@apiSuccess {Number} info.people People at the location
-@apiSuccess {Number} info.crowded Crowded value of the location
-@apiSuccessExample {json} Success-Response:
-    HTTP/1.1 200 OK
-    [
-        {
-            "location": "Regattas",
-            "crowded": 0,
-            "people": 0
-        },
-        {
-            "location": "Commons",
-            "crowded": 0
-            "people": 0
-        },
-        {
-            "location": "Einsteins",
-            "crowded": 0,
-            "people": 0
-        }
-    ]
-"""
-@app.route('/cnu/api/v1.0/info/', methods = ['GET'])
-def get_info():
-    return json.dumps(info.getInfo())
 
 """
 @api {get} /alerts/ Request all active alerts
@@ -187,10 +131,65 @@ def get_info():
         }
     ]
 """
-
 @app.route('/cnu/api/v1.0/alerts/', methods=['GET'])
 def get_alerts():
     return alert_list
+
+"""
+@api {get} /locations/ Request all locations
+@apiName GetLocations
+@apiGroup Location
+@apiVersion 1.0.0
+
+@apiSuccess {Object[]} locations GEOJson FeatureCollection of all locations
+@apiSuccess {String} locations.type GEOJson location list format (always "FeatureCollection")
+@apiSuccess {Object[]} locations.features GEOJson FeatureCollection
+@apiSuccess {String} locations.features.type GEOJson location format (always "Feature")
+@apiSuccess {Object[]} locations.features.properties GEOJson Feature properties
+@apiSuccess {String} locations.features.properties.name Location name
+@apiSuccess {Number} locations.features.properties.priority Location priority (higher number = more nested location)
+@apiSuccess {Object[]} locations.features.style GEOJson Styling data
+@apiSuccess {Object[]} locations.features.geometry GEOJson Geometry list
+@apiSuccess {String} locations.features.geometry.type GEOJson Geometry format (always "Polygon")
+@apiSuccess {Object[]} locations.features.geometry.coordinates GEOJson Coordinate list defining the polygon (lon, lat)
+"""
+@app.route('/cnu/api/v1.0/locations/', methods = ['GET'])
+def get_locations():
+    return locations
+
+"""
+@api {get} /info/ Request all location info
+@apiName GetInfo
+@apiGroup Location
+@apiVersion 1.0.0
+
+@apiSuccess {Object[]} info List of info
+@apiSuccess {String} info.location Location name
+@apiSuccess {Number} info.people People at the location
+@apiSuccess {Number} info.crowded Crowded value of the location
+@apiSuccessExample {json} Success-Response:
+    HTTP/1.1 200 OK
+    [
+        {
+            "location": "Regattas",
+            "crowded": 0,
+            "people": 0
+        },
+        {
+            "location": "Commons",
+            "crowded": 0
+            "people": 0
+        },
+        {
+            "location": "Einsteins",
+            "crowded": 0,
+            "people": 0
+        }
+    ]
+"""
+@app.route('/cnu/api/v1.0/info/', methods = ['GET'])
+def get_info():
+    return json.dumps(info.getInfo())
 
 """
 @api {get} /graphs/:location/ 24-hour user graph

@@ -1,5 +1,6 @@
 {
   "name": "DiningBuddy",
   "version": "1.0.0",
-  "description": "DiningBuddy backend API"
+  "description": "DiningBuddy backend API",
+  "url" : "https://api.gravitydevelopment.net/cnu/api/v1.0"
 }
