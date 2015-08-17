@@ -27,12 +27,12 @@ class Info:
                 if i.get('location') == location:
                     found = True
                     people = i.get('people')+1
-                    crowded = 1 if people > 20 else 2 if people > 50 else 0
+                    crowded = 1 if people > 60 else 2 if people > 90 else 0
                     i.update({'people':people})
                     i.update({'crowded':crowded})
                     break
-            if not found:
-                self.info.append({'location':location,'people':1,'crowded':0})
+#            if not found and location is not None:
+#                self.info.append({'location':location,'people':1,'crowded':0})
 
         return self.info
 

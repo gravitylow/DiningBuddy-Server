@@ -5,8 +5,8 @@ class Noise:
     collection = None
     logger = None
     active = True
-    minimum = 7
-    maximum = 15
+    minimum = 13
+    maximum = 37
 
     def __init__(self, collection, logger):
         self.collection = collection
@@ -15,12 +15,14 @@ class Noise:
     def createNoise(self, location):
         if not self.active:
             return
-        
+
         timekey = int(time.strftime("%H%M"))
         timekey = float(timekey)
         amount = random.randrange(self.minimum, self.maximum)
+        if location == 'Einsteins':
+            amount = amount - 20
         current = int(round(time.time() * 1000))
-        
+
         if timekey >= 2000: # 8pm
             timekey = timekey - 2000
             blank = 1 - (timekey / float(300))
@@ -34,10 +36,9 @@ class Noise:
             else:
                 blank = (timekey / float(200))
                 amount =  int(round(amount * blank))
-        
+
         for x in range(0, amount):
             name = "SERVER" + str(x) + location
             json = {"id":name, "lat":0, "lon":0, "location":location, "send_time":current, "time":current};
             key = {'id':name}
-            self.collection.update(key, json, upsert=True) 
-   
+            self.collection.update(key, json, upsert=True)

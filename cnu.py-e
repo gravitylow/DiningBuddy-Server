@@ -30,12 +30,7 @@ info = Info(app, db)
 def requeryInfo():
     info.createInfo()
 
-def requeryAlerts():
-    global alert_list
-    alert_list = json_util.dumps(db.alerts.find())
-
 scheduler.add_interval_job(requeryInfo, seconds = 60)
-scheduler.add_interval_job(requeryAlerts, seconds = 60 * 5)
 
 @app.route('/')
 def index():
@@ -260,7 +255,7 @@ def get_menu(location):
 """
 @app.route('/cnu/api/v1.0/feed/<location>/', methods=['GET'])
 def get_feed(location):
-    feed = feedback.find({'target': location, 'feedback':{"$exists" : True, "$ne" : "", "$ne": None}}).sort('time', pymongo.DESCENDING)
+    feed = feedback.find({'$or' : [{'target': location}, {'target': 'all'}], 'feedback':{"$exists" : True, "$ne" : "", "$ne": None}}).sort('time', pymongo.DESCENDING)
     if not feed:
         abort(404)
     return json_util.dumps(feed)

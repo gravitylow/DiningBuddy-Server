@@ -14,14 +14,17 @@ regattas_id = 'dining@cnu.edu'
 commons_id = 'cnu.edu_tjpup58u1v03ijvc91uof8qmq0@group.calendar.google.com'
 key = '**REMOVED**'
 
-today = datetime.now(pytz.timezone('US/Eastern'))
-today = today.replace(hour=0, minute=0, second=0)
+today = datetime.now(pytz.timezone('America/New_York'))
+today = today.replace(hour=0, minute=0, second=0, microsecond=0)
+tomorrow = today + timedelta(days=1)
+today = today.isoformat()
+tomorrow = tomorrow.isoformat()
 
 regattas = {}
 commons = {}
 
 service = build('calendar', 'v3', developerKey=key)
-request = service.events().list(calendarId=regattas_id, timeMin=today.isoformat(), timeMax=(today + timedelta(days=1)).isoformat(), singleEvents=True, userIp='2602:ffea:a::580b:b2c3')
+request = service.events().list(calendarId=regattas_id, timeMin=today, timeMax=tomorrow, singleEvents=True, userIp='2602:ffea:a::580b:b2c3')
 while request != None:
     response = request.execute()
     for event in response.get('items', []):
@@ -39,7 +42,7 @@ while request != None:
       regattas[time] = dictionary
     request = service.events().list_next(request, response)
 
-request = service.events().list(calendarId=commons_id, timeMin=today.isoformat(), timeMax=(today + timedelta(days=1)).isoformat(), singleEvents=True)
+request = service.events().list(calendarId=commons_id, timeMin=today, timeMax=tomorrow, singleEvents=True)
 while request != None:
     response = request.execute()
     for event in response.get('items', []):
@@ -72,5 +75,3 @@ file.close()
 file = open('/var/www/api.gravitydevelopment.net/cnu/static/menus/Commons.txt', 'w')
 file.write(json.dumps(commons_new))
 file.close()
-
-
