@@ -19,6 +19,7 @@ db = client.cnu
 feedback = db.feedback
 feedback_archive = db.feedbackarchive
 graphs = db.graphs
+banned_users = db.banned_users
 
 app = Flask(__name__)
 
@@ -212,10 +213,18 @@ def get_graph(location):
 
 @apiUse LocationNotFoundError
 """
+#@app.route('/cnu/api/v1.0/menus/<location>', methods=['GET'])
+#def get_menu_broken(location):
+#    response = app.send_static_file('menus/' + location + '.txt')
+#    return response
+
 @app.route('/cnu/api/v1.0/menus/<location>/', methods=['GET'])
 def get_menu(location):
-    response = app.send_static_file('menus/' + location + '.txt')
-    return response
+    file = open(app.static_folder + '/menus/' + location + '.txt', 'r')
+    #response = app.send_static_file('menus/' + location + '.txt')
+    #response.mimetype = 'text/html'
+    #return response
+    return file.read()
 
 """
 @api {get} /feed/:location/ Request location's feed
@@ -373,7 +382,13 @@ def create_feedback():
     if not request.json or not 'id' in request.json:
         app.logger.warning(str(request.json) + ' disqualified for id')
         abort(400)
-
+    
+    key = {'id': request.json['id']}
+    results = banned_users.find(key)
+    app.logger.warning(str(key) + ': ' + str(results.count()))
+    if results.count() > 0:
+        app.logger.warning(str(request.json) + ' disqualified because they are banned')
+        abort(400)
     current = int(round(time.time() * 1000))
     request.json['time'] = current
 
