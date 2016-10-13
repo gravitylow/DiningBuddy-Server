@@ -25,7 +25,7 @@ for location in locations:
     info.append({'location':location,'people':0})
 
 # Generate Map
-js = "var map = L.map('map').setView([37.063130980486, -76.49447679519653], 17);L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {maxZoom: 18,id: 'examples.map-i875mjb7'}).addTo(map);"
+js = "var map = L.map('map').setView([37.063130980486, -76.49447679519653], 17);L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png?access_token=**REMOVED**', {maxZoom: 18,id: 'examples.map-i875mjb7'}).addTo(map);"
 for record in cursor:
     uuid = record.get('id')
     location = record.get('location')
