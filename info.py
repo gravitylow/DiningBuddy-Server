@@ -1,5 +1,6 @@
 class Info:
     collection = None
+    ban_collection = None
     cursor = None
     logger = None
     info = []
@@ -7,6 +8,7 @@ class Info:
     def __init__(self, app, db):
         self.logger = app.logger
         self.collection = db.updates
+        self.ban_collection = db.banned_users
         self.cursor = self.collection.find()
 	self.createInfo()
 
@@ -27,7 +29,7 @@ class Info:
                 if i.get('location') == location:
                     found = True
                     people = i.get('people')+1
-                    crowded = 1 if people > 60 else 2 if people > 90 else 0
+                    crowded = 2 if people > 150 else 1 if people > 100 else 0
                     i.update({'people':people})
                     i.update({'crowded':crowded})
                     break
@@ -37,7 +39,9 @@ class Info:
         return self.info
 
     def createUpdate(self, json, key):
-        self.collection.update(key, json, upsert=True)
+        results = self.ban_collection.find(key)
+        if results.count() is 0:
+        	self.collection.update(key, json, upsert=True)
 
     def getInfo(self):
         return self.info

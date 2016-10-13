@@ -5,8 +5,8 @@ class Noise:
     collection = None
     logger = None
     active = True
-    minimum = 13
-    maximum = 37
+    minimum = 34
+    maximum = 204
 
     def __init__(self, collection, logger):
         self.collection = collection
@@ -18,14 +18,16 @@ class Noise:
 
         timekey = int(time.strftime("%H%M"))
         timekey = float(timekey)
-        amount = random.randrange(self.minimum, self.maximum)
+        loc_min = self.minimum
+        loc_max = self.maximum
         if location == 'Einsteins':
-            amount = amount - 20
+            loc_max = 50
+        amount = random.randrange(loc_min, loc_max)
         current = int(round(time.time() * 1000))
 
         if timekey >= 2000: # 8pm
             timekey = timekey - 2000
-            blank = 1 - (timekey / float(300))
+            blank = 1 - (timekey / float(150))
             amount = int(round(amount * blank))
             if amount < 0:
                 amount = 0
