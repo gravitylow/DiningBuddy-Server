@@ -32,7 +32,7 @@ while request != None:
       description = event.get('description')
       start = dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%I:%M%p').lstrip("0")
       end = dateutil.parser.parse(event.get('end').get('dateTime')).strftime('%I:%M%p').lstrip("0")
-      time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%H'))
+      time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%s'))
 
       dictionary = {}
       dictionary['summary'] = summary
@@ -50,7 +50,7 @@ while request != None:
       description = event.get('description')
       start = dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%I:%M%p').lstrip("0")
       end = dateutil.parser.parse(event.get('end').get('dateTime')).strftime('%I:%M%p').lstrip("0")
-      time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%H'))
+      time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%s'))
 
       dictionary = {}
       dictionary['summary'] = summary
