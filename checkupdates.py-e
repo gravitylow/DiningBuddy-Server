@@ -34,7 +34,7 @@ for record in cursor:
     lon = record.get('lon')
     js = js + "L.marker([" + str(lat) + "," + str(lon) + "]).addTo(map).bindPopup(\"<b>Location:</b> " + location + "<br /><b>UUID:</b> " + uuid + "\");"
 
-jsfile = open('static/maps/updates.js', 'w')
+jsfile = open(config.APP_DIRECTORY + 'static/maps/updates.js', 'w')
 jsfile.write(js)
 
 cursor = db.updates.find()
@@ -86,4 +86,4 @@ for location in locations:
         p.append(int(l.get('people')))
     chart.x_labels = t
     chart.add('People', p)
-    chart.render_to_file('static/graphs/' + location + '.svg')
+    chart.render_to_file(config.APP_DIRECTORY + 'static/graphs/' + location + '.svg')
