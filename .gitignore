@@ -1,6 +1,6 @@
 static/
 flask/
 logs/
-.idea/*
-*.iml
-*.pyc
+docs/
+.*
+__*

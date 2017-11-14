@@ -10,7 +10,7 @@ class Info:
         self.collection = db.updates
         self.ban_collection = db.banned_users
         self.cursor = self.collection.find()
-	self.createInfo()
+        self.createInfo()
 
     def createInfo(self):
         self.cursor = self.collection.find()
@@ -33,8 +33,6 @@ class Info:
                     i.update({'people':people})
                     i.update({'crowded':crowded})
                     break
-#            if not found and location is not None:
-#                self.info.append({'location':location,'people':1,'crowded':0})
 
         return self.info
 

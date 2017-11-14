@@ -32,6 +32,7 @@ def requeryInfo():
     info.createInfo()
 
 scheduler.add_interval_job(requeryInfo, seconds = 60)
+requeryInfo()
 
 @app.route('/')
 def index():

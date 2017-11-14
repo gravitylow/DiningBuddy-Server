@@ -1,18 +1,13 @@
 #!flask/bin/python
-import urllib
-import urllib2
 import simplejson
 import pprint
 import os
 import dateutil.parser
-from datetime import datetime, timedelta, date
 import pytz
 import json
+import config
 from apiclient.discovery import build
-
-regattas_id = 'dining@cnu.edu'
-commons_id = 'cnu.edu_tjpup58u1v03ijvc91uof8qmq0@group.calendar.google.com'
-key = '**REMOVED**'
+from datetime import datetime, timedelta, date
 
 today = datetime.now(pytz.timezone('America/New_York'))
 today = today.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -23,41 +18,41 @@ tomorrow = tomorrow.isoformat()
 regattas = {}
 commons = {}
 
-service = build('calendar', 'v3', developerKey=key)
-request = service.events().list(calendarId=regattas_id, timeMin=today, timeMax=tomorrow, singleEvents=True, userIp='2602:ffea:a::580b:b2c3')
+service = build('calendar', 'v3', developerKey=config.GOOGLE_CALENDAR_KEY)
+request = service.events().list(calendarId=config.GOOGLE_CALENDAR_REGATTAS_ID, timeMin=today, timeMax=tomorrow, singleEvents=True)
 while request != None:
     response = request.execute()
     for event in response.get('items', []):
-      summary = event.get('summary')
-      description = event.get('description')
-      start = dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%I:%M%p').lstrip("0")
-      end = dateutil.parser.parse(event.get('end').get('dateTime')).strftime('%I:%M%p').lstrip("0")
-      time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%s'))
+        summary = event.get('summary')
+        description = event.get('description')
+        start = dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%I:%M%p').lstrip("0")
+        end = dateutil.parser.parse(event.get('end').get('dateTime')).strftime('%I:%M%p').lstrip("0")
+        time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%s'))
 
-      dictionary = {}
-      dictionary['summary'] = summary
-      dictionary['description'] = description
-      dictionary['start'] = start
-      dictionary['end'] = end
-      regattas[time] = dictionary
+        dictionary = {}
+        dictionary['summary'] = summary
+        dictionary['description'] = description
+        dictionary['start'] = start
+        dictionary['end'] = end
+        regattas[time] = dictionary
     request = service.events().list_next(request, response)
 
-request = service.events().list(calendarId=commons_id, timeMin=today, timeMax=tomorrow, singleEvents=True)
+request = service.events().list(calendarId=config.GOOGLE_CALENDAR_COMMONS_ID, timeMin=today, timeMax=tomorrow, singleEvents=True)
 while request != None:
     response = request.execute()
     for event in response.get('items', []):
-      summary = event.get('summary')
-      description = event.get('description')
-      start = dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%I:%M%p').lstrip("0")
-      end = dateutil.parser.parse(event.get('end').get('dateTime')).strftime('%I:%M%p').lstrip("0")
-      time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%s'))
+        summary = event.get('summary')
+        description = event.get('description')
+        start = dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%I:%M%p').lstrip("0")
+        end = dateutil.parser.parse(event.get('end').get('dateTime')).strftime('%I:%M%p').lstrip("0")
+        time = int(dateutil.parser.parse(event.get('start').get('dateTime')).strftime('%s'))
 
-      dictionary = {}
-      dictionary['summary'] = summary
-      dictionary['description'] = description
-      dictionary['start'] = start
-      dictionary['end'] = end
-      commons[time] = dictionary
+        dictionary = {}
+        dictionary['summary'] = summary
+        dictionary['description'] = description
+        dictionary['start'] = start
+        dictionary['end'] = end
+        commons[time] = dictionary
     request = service.events().list_next(request, response)
 
 regattas_new = []
@@ -69,9 +64,9 @@ for value in sorted(regattas):
 for value in sorted(commons):
     commons_new.append(commons.get(value))
 
-file = open('/var/www/api.gravitydevelopment.net/cnu/static/menus/Regattas.txt', 'w')
+file = open('static/menus/Regattas.txt', 'w')
 file.write(json.dumps(regattas_new))
 file.close()
-file = open('/var/www/api.gravitydevelopment.net/cnu/static/menus/Commons.txt', 'w')
+file = open('static/menus/Commons.txt', 'w')
 file.write(json.dumps(commons_new))
 file.close()

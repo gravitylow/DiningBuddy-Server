@@ -1,12 +1,13 @@
 #!flask/bin/python
+import pymongo
+import pygal
+import random
+import config
+from time import strftime
 from bson.json_util import loads, dumps
 from pymongo import MongoClient
-import pymongo
-from time import strftime
-import pygal
 from pygal import Config
 from pygal.style import LightSolarizedStyle, LightGreenStyle
-import random
 from db import Database
 
 client = Database.get_client()
@@ -25,19 +26,15 @@ for location in locations:
     info.append({'location':location,'people':0})
 
 # Generate Map
-js = "var map = L.map('map').setView([37.063130980486, -76.49447679519653], 17);L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png?access_token=**REMOVED**', {maxZoom: 18,id: 'examples.map-i875mjb7'}).addTo(map);"
+js = "var map = L.map('map').setView([37.063130980486, -76.49447679519653], 17);L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {maxZoom: 18,id: 'mapbox.streets',accessToken: '" + config.MAPBOX_KEY + "'}).addTo(map);"
 for record in cursor:
     uuid = record.get('id')
     location = record.get('location')
     lat = record.get('lat')
     lon = record.get('lon')
-    print (uuid)
-    print (location)
-    print (lat)
-    print (lon)
     js = js + "L.marker([" + str(lat) + "," + str(lon) + "]).addTo(map).bindPopup(\"<b>Location:</b> " + location + "<br /><b>UUID:</b> " + uuid + "\");"
 
-jsfile = open('/var/www/api.gravitydevelopment.net/cnu/static/maps/updates.js', 'w')
+jsfile = open('static/maps/updates.js', 'w')
 jsfile.write(js)
 
 cursor = db.updates.find()
@@ -89,4 +86,4 @@ for location in locations:
         p.append(int(l.get('people')))
     chart.x_labels = t
     chart.add('People', p)
-    chart.render_to_file('/var/www/api.gravitydevelopment.net/cnu/static/graphs/' + location + '.svg')
+    chart.render_to_file('static/graphs/' + location + '.svg')

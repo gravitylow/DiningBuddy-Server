@@ -1,4 +1,4 @@
-CNU-Server
+DiningBuddy-Server
 ==========
 
 Installation (Ubuntu)
@@ -22,14 +22,14 @@ Add ssh key to github
     cd cnu
     virtualenv flask
     source flask/bin/activate
-    sudo pip install flask pymongo simplejson python-dateutil pytz google-api-python-client pygal
+    pip install -r requirements.txt
     deactivate
     mkdir static
     mkdir static/menus
     mkdir static/graphs
     sudo crontab -e
     
-Add data/crontab
+Add jobs from data/crontab and save
 
     mongoimport --db cnu --collection locations --file data/mongo/locations.json
     mongoimport --db cnu --collection graphs --file data/mongo/graphs.json
