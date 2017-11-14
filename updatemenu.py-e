@@ -5,7 +5,7 @@ import os
 import dateutil.parser
 import pytz
 import json
-import config
+import config as app_config
 from apiclient.discovery import build
 from datetime import datetime, timedelta, date
 
@@ -18,8 +18,8 @@ tomorrow = tomorrow.isoformat()
 regattas = {}
 commons = {}
 
-service = build('calendar', 'v3', developerKey=config.GOOGLE_CALENDAR_KEY)
-request = service.events().list(calendarId=config.GOOGLE_CALENDAR_REGATTAS_ID, timeMin=today, timeMax=tomorrow, singleEvents=True)
+service = build('calendar', 'v3', developerKey=app_config.GOOGLE_CALENDAR_KEY)
+request = service.events().list(calendarId=app_config.GOOGLE_CALENDAR_REGATTAS_ID, timeMin=today, timeMax=tomorrow, singleEvents=True)
 while request != None:
     response = request.execute()
     for event in response.get('items', []):
@@ -37,7 +37,7 @@ while request != None:
         regattas[time] = dictionary
     request = service.events().list_next(request, response)
 
-request = service.events().list(calendarId=config.GOOGLE_CALENDAR_COMMONS_ID, timeMin=today, timeMax=tomorrow, singleEvents=True)
+request = service.events().list(calendarId=app_config.GOOGLE_CALENDAR_COMMONS_ID, timeMin=today, timeMax=tomorrow, singleEvents=True)
 while request != None:
     response = request.execute()
     for event in response.get('items', []):
@@ -64,9 +64,9 @@ for value in sorted(regattas):
 for value in sorted(commons):
     commons_new.append(commons.get(value))
 
-file = open(config.APP_DIRECTORY + 'static/menus/Regattas.txt', 'w')
+file = open(app_config.APP_DIRECTORY + 'static/menus/Regattas.txt', 'w')
 file.write(json.dumps(regattas_new))
 file.close()
-file = open(config.APP_DIRECTORY + 'static/menus/Commons.txt', 'w')
+file = open(app_config.APP_DIRECTORY + 'static/menus/Commons.txt', 'w')
 file.write(json.dumps(commons_new))
 file.close()

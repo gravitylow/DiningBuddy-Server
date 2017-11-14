@@ -2,7 +2,7 @@
 import pymongo
 import pygal
 import random
-import config
+import config as app_config
 from time import strftime
 from bson.json_util import loads, dumps
 from pymongo import MongoClient
@@ -26,7 +26,7 @@ for location in locations:
     info.append({'location':location,'people':0})
 
 # Generate Map
-js = "var map = L.map('map').setView([37.063130980486, -76.49447679519653], 17);L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {maxZoom: 18,id: 'mapbox.streets',accessToken: '" + config.MAPBOX_KEY + "'}).addTo(map);"
+js = "var map = L.map('map').setView([37.063130980486, -76.49447679519653], 17);L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {maxZoom: 18,id: 'mapbox.streets',accessToken: '" + app_config.MAPBOX_KEY + "'}).addTo(map);"
 for record in cursor:
     uuid = record.get('id')
     location = record.get('location')
@@ -34,7 +34,7 @@ for record in cursor:
     lon = record.get('lon')
     js = js + "L.marker([" + str(lat) + "," + str(lon) + "]).addTo(map).bindPopup(\"<b>Location:</b> " + location + "<br /><b>UUID:</b> " + uuid + "\");"
 
-jsfile = open(config.APP_DIRECTORY + 'static/maps/updates.js', 'w')
+jsfile = open(app_config.APP_DIRECTORY + 'static/maps/updates.js', 'w')
 jsfile.write(js)
 
 cursor = db.updates.find()
@@ -86,4 +86,4 @@ for location in locations:
         p.append(int(l.get('people')))
     chart.x_labels = t
     chart.add('People', p)
-    chart.render_to_file(config.APP_DIRECTORY + 'static/graphs/' + location + '.svg')
+    chart.render_to_file(app_config.APP_DIRECTORY + 'static/graphs/' + location + '.svg')
