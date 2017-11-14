@@ -1,11 +1,11 @@
-MONGO_HOST = "**REMOVED**"
-MONGO_USERNAME = "flask"
-MONGO_PASSWORD = "**REMOVED**"
-MONGO_DATABSE = "cnu"
+MONGO_HOST = "localhost"
+MONGO_USERNAME = "myusername"
+MONGO_PASSWORD = "mypassword"
+MONGO_DATABSE = "mydatabase"
 
-MAPBOX_KEY = "**REMOVED**"
+MAPBOX_KEY = "mapboxkey"
 
-GOOGLE_CALENDAR_KEY = "**REMOVED**"
+GOOGLE_CALENDAR_KEY = "gcalkey"
 GOOGLE_CALENDAR_REGATTAS_ID = "dining@cnu.edu"
 GOOGLE_CALENDAR_COMMONS_ID = "cnu.edu_tjpup58u1v03ijvc91uof8qmq0@group.calendar.google.com"
 
